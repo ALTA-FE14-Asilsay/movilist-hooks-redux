@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import withReactContent from 'sweetalert2-react-content';
-import { FC, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import { GetGenresType, GetMovieType, GetDetailType } from '../utils/movieType';
 import { Layout, Section } from '../components/Layout';
@@ -18,7 +18,7 @@ export const Detail = () => {
 
   const MySwal = withReactContent(swal);
 
-  const id = location?.state?.movie_id;
+  const id: string = location?.state?.movie_id;
 
   const fetchDetail = async (code: string) => {
     setIsLoading(true);
@@ -71,7 +71,7 @@ export const Detail = () => {
 
   useEffect(() => {
     dedicatedMount();
-  }, [dedicatedMount]);
+  }, [id]);
 
   return (
     <Layout>

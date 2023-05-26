@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FC } from 'react';
 
 interface NavbarProps {
@@ -6,28 +6,26 @@ interface NavbarProps {
 }
 
 const Navbar: FC<NavbarProps> = ({ id }) => {
-  const navigate = useNavigate();
-
   return (
     <div
       id={id}
       className="navbar bg-primary sticky top-0 px-16 lg:px-24 z-20"
     >
       <div className="flex-1">
-        <a
-          onClick={() => navigate('/')}
+        <Link
+          to={'/'}
           className="btn btn-ghost normal-case text-xl"
         >
           Movilist
-        </a>
+        </Link>
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
           <li>
-            <a onClick={() => navigate('/')}>Home</a>
+            <Link to={'/'}>Home</Link>
           </li>
           <li>
-            <a onClick={() => navigate('/favorite')}>Favorites</a>
+            <Link to={'/favorite'}>Favorites</Link>
           </li>
         </ul>
       </div>
