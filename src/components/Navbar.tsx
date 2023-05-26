@@ -1,43 +1,36 @@
-import { Component } from 'react';
-import { withRouter } from '../withRouter';
+import { Link } from 'react-router-dom';
+import { FC } from 'react';
 
 interface NavbarProps {
   id: string;
-  navigate: any;
 }
 
-class Navbar extends Component<NavbarProps> {
-  // handleNav(target?: string) {
-  //   const navigate = this.props.navigate;
-  //   navigate(`${target}`);
-  // }
-
-  render() {
-    const { id, navigate } = this.props;
-
-    return (
-      <div className="navbar bg-primary sticky top-0 px-16 lg:px-24 z-20">
-        <div className="flex-1">
-          <a
-            onClick={() => navigate('/')}
-            className="btn btn-ghost normal-case text-xl"
-          >
-            Movilist
-          </a>
-        </div>
-        <div className="flex-none">
-          <ul className="menu menu-horizontal px-1">
-            <li>
-              <a onClick={() => navigate('/')}>Home</a>
-            </li>
-            <li>
-              <a onClick={() => navigate('/favorite')}>Favorites</a>
-            </li>
-          </ul>
-        </div>
+const Navbar: FC<NavbarProps> = ({ id }) => {
+  return (
+    <div
+      id={id}
+      className="navbar bg-primary sticky top-0 px-16 lg:px-24 z-20"
+    >
+      <div className="flex-1">
+        <Link
+          to={'/'}
+          className="btn btn-ghost normal-case text-xl"
+        >
+          Movilist
+        </Link>
       </div>
-    );
-  }
-}
+      <div className="flex-none">
+        <ul className="menu menu-horizontal px-1">
+          <li>
+            <Link to={'/'}>Home</Link>
+          </li>
+          <li>
+            <Link to={'/favorite'}>Favorites</Link>
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+};
 
-export default withRouter(Navbar);
+export default Navbar;

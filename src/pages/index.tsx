@@ -1,121 +1,127 @@
-import { Component } from 'react';
+import withReactContent from 'sweetalert2-react-content';
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 import { Layout, Section } from '../components/Layout';
 import { Card, HeroesCard } from '../components/Card';
 import { GetMovieType } from '../utils/movieType';
 import Spinner from '../components/Loading';
-import { withRouter } from '../withRouter';
 import api from '../utils/api';
+import swal from '../utils/swal';
 
-interface DatasState {
-  handleTime?: string;
-  isLoading: boolean;
-  datasNowPlay: Array<GetMovieType>;
-  datasUpc: Array<GetMovieType>;
-  datasTopRate: GetMovieType;
-  navigate: any;
-}
+const Home = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [handleTime, setHandleTime] = useState<string>('');
+  const [datasNowPlay, setDatasNowPlay] = useState<GetMovieType[]>([]);
+  const [datasUpc, setDatasUpc] = useState<GetMovieType[]>([]);
+  const [datasTopRate, setDatasTopRate] = useState<GetMovieType>({
+    title: '',
+    overview: '',
+    poster_path: '',
+    id: 0,
+  });
 
-class Home extends Component<DatasState> {
-  state = {
-    datasNowPlay: [],
-    datasUpc: [],
-    datasTopRate: {
-      title: '',
-      overview: '',
-      poster_path: '',
-      id: 0,
-    },
-    handleTime: '',
-    isLoading: false,
+  const navigate = useNavigate();
+  const MySwal = withReactContent(swal);
+
+  const fetchNowPlay = async (code: string) => {
+    setIsLoading(true);
+    await api
+      .getAll(code)
+      .then((response) => {
+        const { results } = response.data;
+        setDatasNowPlay(results);
+      })
+      .catch((error) => {
+        MySwal.fire({
+          icon: 'error',
+          title: 'Failed',
+          text: `error :  ${error.message}`,
+          showCancelButton: false,
+        });
+      });
   };
 
-  async fetchNowPlay(code: string) {
+  const fetchUpcoming = async (code: string) => {
+    setIsLoading(true);
     await api
       .getAll(code)
       .then((response) => {
-        this.setState({ isLoading: true });
-        this.setState({ datasNowPlay: response.data.results });
+        const { results } = response.data;
+        setDatasUpc(results);
       })
       .catch((error) => {
-        console.log('error : ', error.message);
-      });
-  }
-  async fetchUpcoming(code: string) {
-    await api
-      .getAll(code)
-      .then((response) => {
-        this.setState({ isLoading: true });
-        this.setState({ datasUpc: response.data.results });
-      })
-      .catch((error) => {
-        console.log('error : ', error.message);
-      });
-  }
-  async fetchRandomHero(code: string) {
-    await api
-      .getAll(code)
-      .then((response) => {
-        this.setState({ isLoading: true });
-        this.setState({
-          datasTopRate:
-            response.data.results[
-              Math.floor(Math.random() * response.data.results.length)
-            ],
+        MySwal.fire({
+          icon: 'error',
+          title: 'Failed',
+          text: `error :  ${error.message}`,
+          showCancelButton: false,
         });
+      });
+  };
+
+  const fetchRandomHero = async (code: string) => {
+    setIsLoading(true);
+    await api
+      .getAll(code)
+      .then((response) => {
+        const { results } = response.data;
+        setDatasTopRate(
+          results[Math.floor(Math.random() * response.data.results.length)]
+        );
       })
       .catch((error) => {
-        console.log('error : ', error.message);
+        MySwal.fire({
+          icon: 'error',
+          title: 'Failed',
+          text: `error :  ${error.message}`,
+          showCancelButton: false,
+        });
       });
-  }
+  };
 
-  handleNav(movie_id?: number) {
-    const navigate = this.props.navigate;
+  const handleNav = (movie_id?: number) => {
     navigate(`/detail/${movie_id}`, {
       state: {
         movie_id: movie_id,
       },
     });
-  }
+  };
 
-  timeGreeting() {
+  const timeGreeting = () => {
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
 
     if (currentHour < 12) {
-      this.setState({ handleTime: 'good Morning' });
+      setHandleTime('good Morning');
     } else if (currentHour >= 12 && currentHour < 17) {
-      this.setState({ handleTime: 'good Aternoon' });
+      setHandleTime('good Aternoon');
     } else if (currentHour >= 17 && currentHour < 21) {
-      this.setState({ handleTime: 'good Evening' });
+      setHandleTime('good Evening');
     } else {
-      this.setState({ handleTime: 'good Night' });
+      setHandleTime('good Night');
     }
+  };
+
+  function dedicatedMount() {
+    fetchNowPlay('now_playing');
+    fetchUpcoming('upcoming');
+    fetchRandomHero('top_rated');
+    timeGreeting();
   }
 
-  dedicatedMount() {
-    this.fetchNowPlay('now_playing');
-    this.fetchUpcoming('upcoming');
-    this.fetchRandomHero('top_rated');
-    this.timeGreeting();
-  }
+  useEffect(() => {
+    dedicatedMount();
+  }, []);
 
-  componentDidMount() {
-    this.dedicatedMount();
-  }
-
-  render() {
-    const { datasNowPlay, datasUpc, datasTopRate, isLoading, handleTime } =
-      this.state;
-
-    return (
-      <Layout>
-        <Section
-          addClass="hero bg-base-100 -mt-0 md:-mt-12 xl:-mt-16 px-16 lg:px-24"
-          id="greeting-section"
-        >
-          <div className="hero-content flex-col md:flex-row">
-            {/* {
+  return (
+    <Layout>
+      <Section
+        addClass="hero bg-base-100 -mt-0 md:-mt-12 xl:-mt-16 px-16 lg:px-24"
+        id="greeting-section"
+      >
+        <div className="hero-content flex-col md:flex-row">
+          {/* {
               <HeroesCard
                 id={`movie-${datasTopRate.title}`}
                 title={datasTopRate.title}
@@ -124,101 +130,100 @@ class Home extends Component<DatasState> {
                  onClick={() => this.handleNav(datasTopRate.id)}
               />
             } */}
-            <img
-              src="http://placekitten.com/900/900"
-              className="max-w-sm lg:max-w-md xl:max-w-lg rounded-lg shadow-2xl"
-            />
-            <div className="">
-              <h1 className="text-5xl font-bold">Welcome!</h1>
-              <p className="py-6">
-                Hello, {handleTime} this is a web for learning and this section
-                is greeting, yey!
-              </p>
-              <button
-                onClick={() => this.handleNav(datasTopRate.id)}
-                className="btn btn-primary"
-              >
-                Get Random Top
-              </button>
+          <img
+            src="http://placekitten.com/900/900"
+            className="max-w-sm lg:max-w-md xl:max-w-lg rounded-lg shadow-2xl"
+          />
+          <div className="">
+            <h1 className="text-5xl font-bold">Welcome!</h1>
+            <p className="py-6">
+              Hello, {handleTime} this is a web for learning and this section is
+              greeting, yey!
+            </p>
+            <button
+              onClick={() => handleNav(datasTopRate.id)}
+              className="btn btn-primary"
+            >
+              Get Random Top
+            </button>
+          </div>
+        </div>
+      </Section>
+      <Section
+        addClass="bg-base-300 px-16 lg:px-24 py-16 !min-h-full"
+        id="upcoming-movie-section"
+      >
+        <div className="w-full flex flex-col  items-center gap-5">
+          <p className="text-3xl mb-6 tracking-wider uppercase font-semibold ">
+            Upcoming Movie
+          </p>
+          {datasUpc && isLoading === true ? (
+            <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
+              {datasUpc.slice(0, 4).map((item: GetMovieType) => {
+                return (
+                  <Card
+                    key={item.id}
+                    id={`movie-${item.title}`}
+                    title={item.title}
+                    description={item.overview}
+                    image={item.poster_path}
+                    onClick={() => handleNav(item.id)}
+                  />
+                );
+              })}
             </div>
-          </div>
-        </Section>
-        <Section
-          addClass="bg-base-300 px-16 lg:px-24 py-16 !min-h-full"
-          id="upcoming-movie-section"
-        >
-          <div className="w-full flex flex-col  items-center gap-5">
-            <p className="text-3xl mb-6 tracking-wider uppercase font-semibold ">
-              Upcoming Movie
-            </p>
-            {datasUpc && isLoading === true ? (
-              <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
-                {datasUpc.slice(0, 4).map((item: GetMovieType) => {
-                  return (
-                    <Card
-                      key={item.id}
-                      id={`movie-${item.title}`}
-                      title={item.title}
-                      description={item.overview}
-                      image={item.poster_path}
-                      onClick={() => this.handleNav(item.id)}
-                    />
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="w-full bg-slate-400 h-[450px] flex items-center justify-center">
-                <Spinner />
-              </div>
-            )}
-            <button
-              id="nav-showmore"
-              className="btn btn-primary btn-wide"
-            >
-              More
-            </button>
-          </div>
-        </Section>
-        <Section
-          addClass="bg-base-100 px-16 lg:px-24 py-16 pt-16 "
-          id="now-playing-section"
-        >
-          <div className="w-full min-h-screen flex flex-col items-center gap-5">
-            <p className="text-3xl mb-6 tracking-wider uppercase font-semibold ">
-              Now Playing Movie
-            </p>
-            {datasNowPlay && isLoading === true ? (
-              <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
-                {datasNowPlay.map((item: GetMovieType) => {
-                  return (
-                    <Card
-                      key={item.id}
-                      id={`movie-${item.title}`}
-                      title={item.title}
-                      description={item.overview}
-                      image={item.poster_path}
-                      onClick={() => this.handleNav(item.id)}
-                    />
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="w-full bg-slate-400 h-[450px] flex items-center justify-center">
-                <Spinner />
-              </div>
-            )}
+          ) : (
+            <div className="w-full bg-slate-400 h-[450px] flex items-center justify-center">
+              <Spinner />
+            </div>
+          )}
+          <button
+            id="nav-showmore"
+            className="btn btn-primary btn-wide"
+          >
+            More
+          </button>
+        </div>
+      </Section>
+      <Section
+        addClass="bg-base-100 px-16 lg:px-24 py-16 pt-16 "
+        id="now-playing-section"
+      >
+        <div className="w-full min-h-screen flex flex-col items-center gap-5">
+          <p className="text-3xl mb-6 tracking-wider uppercase font-semibold ">
+            Now Playing Movie
+          </p>
+          {datasNowPlay && isLoading === true ? (
+            <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
+              {datasNowPlay.map((item: GetMovieType) => {
+                return (
+                  <Card
+                    key={item.id}
+                    id={`movie-${item.title}`}
+                    title={item.title}
+                    description={item.overview}
+                    image={item.poster_path}
+                    onClick={() => handleNav(item.id)}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <div className="w-full bg-slate-400 h-[450px] flex items-center justify-center">
+              <Spinner />
+            </div>
+          )}
 
-            <button
-              id="nav-showmore"
-              className="btn btn-primary btn-wide"
-            >
-              Show More
-            </button>
-          </div>
-        </Section>
-      </Layout>
-    );
-  }
-}
+          <button
+            id="nav-showmore"
+            className="btn btn-primary btn-wide"
+          >
+            Show More
+          </button>
+        </div>
+      </Section>
+    </Layout>
+  );
+};
 
-export default withRouter(Home);
+export default Home;
