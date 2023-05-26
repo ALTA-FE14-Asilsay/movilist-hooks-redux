@@ -8,14 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import withReactContent from 'sweetalert2-react-content';
 import swal from '../utils/swal';
 
-interface DatasState {
-  isLoading: boolean;
-  datasFavo: Array<GetMovieType>;
-}
-
-export const Favorites: FC<DatasState> = () => {
+export const Favorites = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [datasFavo, setDatasFavo] = useState([]);
+  const [datasFavo, setDatasFavo] = useState<GetMovieType[]>([]);
 
   const MySwal = withReactContent(swal);
 
@@ -28,7 +23,6 @@ export const Favorites: FC<DatasState> = () => {
       .then((response) => {
         const { data } = response.data.results;
         setDatasFavo(data);
-        console.log(response);
       })
       .catch((error) => {
         MySwal.fire({

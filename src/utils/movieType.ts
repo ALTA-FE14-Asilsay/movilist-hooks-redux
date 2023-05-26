@@ -19,3 +19,15 @@ export interface GetGenresType {
   name?: string;
   id?: number;
 }
+
+export interface GetDetailType {
+  id?: number;
+  title?: string;
+  runtime?: string;
+  genres?: Array<GetGenresType>;
+  original_language?: string;
+  poster_path?: string;
+  status?: string;
+  overview?: string;
+  datasSimilar?: Array<GetMovieType>;
+}
