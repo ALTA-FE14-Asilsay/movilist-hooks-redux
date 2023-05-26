@@ -1,14 +1,13 @@
+import { useLocation, useNavigate } from 'react-router-dom';
+import withReactContent from 'sweetalert2-react-content';
 import { FC, useState, useEffect } from 'react';
 
 import { GetGenresType, GetMovieType, GetDetailType } from '../utils/movieType';
 import { Layout, Section } from '../components/Layout';
 import Spinner from '../components/Loading';
 import { Card } from '../components/Card';
-import api from '../utils/api';
-
 import swal from '../utils/swal';
-import withReactContent from 'sweetalert2-react-content';
-import { useLocation, useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 
 export const Detail = () => {
   const navigate = useNavigate();
@@ -28,7 +27,6 @@ export const Detail = () => {
       .then((response) => {
         const { data } = response;
         setDataDetail(data);
-        console.log(dataDetail);
       })
       .catch((error) => {
         MySwal.fire({

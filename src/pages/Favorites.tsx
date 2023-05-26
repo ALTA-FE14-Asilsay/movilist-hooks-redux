@@ -1,12 +1,13 @@
-import { FC, useState, useEffect } from 'react';
-import { Layout, Section } from '../components/Layout';
-import { Card } from '../components/Card';
-import Spinner from '../components/Loading';
-import { GetMovieType } from '../utils/movieType';
-import api from '../utils/api';
-import { useNavigate } from 'react-router-dom';
 import withReactContent from 'sweetalert2-react-content';
+import { FC, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { Layout, Section } from '../components/Layout';
+import { GetMovieType } from '../utils/movieType';
+import Spinner from '../components/Loading';
+import { Card } from '../components/Card';
 import swal from '../utils/swal';
+import api from '../utils/api';
 
 export const Favorites = () => {
   const [isLoading, setIsLoading] = useState(false);
