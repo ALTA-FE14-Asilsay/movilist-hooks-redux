@@ -125,7 +125,7 @@ const Home = () => {
         <div className="hero-content flex-col md:flex-row">
           {datasTopRate && isLoading === true ? (
             <HeroesCard
-              key={`detail ${datasTopRate.id}`}
+              key={`card-${datasTopRate.id}`}
               button_label="Get Detail"
               item={datasTopRate}
               onClick={() => handleNav(datasTopRate.id)}
@@ -163,21 +163,19 @@ const Home = () => {
           </p>
           {datasUpc && isLoading === true ? (
             <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
-              {datasUpc.slice(0, 4).map((item: GetMovieType) => {
+              {datasUpc.slice(0, 4).map((prop: GetMovieType) => {
                 return (
                   <Card
-                    key={item.id}
-                    id={`movie-${item.title}`}
-                    title={item.title}
-                    description={item.overview}
-                    image={item.poster_path}
-                    onClick={() => handleNav(item.id)}
+                    key={`card-${prop.id}`}
+                    button_label="Detail"
+                    item={prop}
+                    onClick={() => handleNav(prop.id)}
                   />
                 );
               })}
             </div>
           ) : (
-            <div className="w-full bg-slate-400 h-[450px] flex items-center justify-center">
+            <div className="w-full bg-base-300 h-[450px] flex items-center justify-center">
               <Spinner />
             </div>
           )}
@@ -199,21 +197,19 @@ const Home = () => {
           </p>
           {datasNowPlay && isLoading === true ? (
             <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
-              {datasNowPlay.map((item: GetMovieType) => {
+              {datasNowPlay.map((prop: GetMovieType) => {
                 return (
                   <Card
-                    key={item.id}
-                    id={`movie-${item.title}`}
-                    title={item.title}
-                    description={item.overview}
-                    image={item.poster_path}
-                    onClick={() => handleNav(item.id)}
+                    key={`card-${prop.id}`}
+                    button_label="Detail"
+                    item={prop}
+                    onClick={() => handleNav(prop.id)}
                   />
                 );
               })}
             </div>
           ) : (
-            <div className="w-full bg-slate-400 h-[450px] flex items-center justify-center">
+            <div className="w-full bg-base-100 h-[450px] flex items-center justify-center">
               <Spinner />
             </div>
           )}
