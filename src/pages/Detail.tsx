@@ -163,15 +163,13 @@ export const Detail = () => {
           </p>
           {datasSimilar && isLoading === true ? (
             <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
-              {datasSimilar.slice(0, 4).map((item: GetMovieType) => {
+              {datasSimilar.slice(0, 4).map((prop: GetMovieType) => {
                 return (
                   <Card
-                    key={item.id}
-                    id={`movie-${item.title}`}
-                    title={item.title}
-                    description={item.overview}
-                    image={item.poster_path}
-                    onClick={() => handleNav(item.id)}
+                    key={`card-${prop.id}`}
+                    button_label="Detail"
+                    item={prop}
+                    onClick={() => handleNav(prop.id)}
                   />
                 );
               })}

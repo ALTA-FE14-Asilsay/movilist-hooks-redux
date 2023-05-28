@@ -9,7 +9,7 @@ export default {
     },
     extend: {},
   },
-  plugins: [require('daisyui')],
+  plugins: [require('daisyui', '@tailwindcss/line-clamp')],
   daisyui: {
     themes: ['bumblebee', 'luxury'],
   },

@@ -43,7 +43,6 @@ const Home = () => {
   };
 
   const fetchUpcoming = async (code: string) => {
-    setIsLoading(true);
     await api
       .getAll(code)
       .then((response) => {
@@ -61,7 +60,6 @@ const Home = () => {
   };
 
   const fetchRandomHero = async (code: string) => {
-    setIsLoading(true);
     await api
       .getAll(code)
       .then((response) => {
@@ -104,10 +102,14 @@ const Home = () => {
   };
 
   function dedicatedMount() {
-    fetchNowPlay('now_playing');
-    fetchUpcoming('upcoming');
-    fetchRandomHero('top_rated');
-    timeGreeting();
+    setIsLoading(true);
+    setTimeout(() => {
+      fetchNowPlay('now_playing');
+      fetchUpcoming('upcoming');
+      fetchRandomHero('top_rated');
+      timeGreeting();
+    }, 1000);
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -121,27 +123,29 @@ const Home = () => {
         id="greeting-section"
       >
         <div className="hero-content flex-col md:flex-row">
-          {/* {
-              <HeroesCard
-                id={`movie-${datasTopRate.title}`}
-                title={datasTopRate.title}
-                description={datasTopRate.overview}
-                image={datasTopRate.poster_path}
-                 onClick={() => this.handleNav(datasTopRate.id)}
-              />
-            } */}
-          <img
-            src="http://placekitten.com/900/900"
-            className="max-w-sm lg:max-w-md xl:max-w-lg rounded-lg shadow-2xl"
-          />
+          {datasTopRate && isLoading === true ? (
+            <HeroesCard
+              key={`card-${datasTopRate.id}`}
+              button_label="Get Detail"
+              item={datasTopRate}
+              onClick={() => handleNav(datasTopRate.id)}
+            />
+          ) : (
+            <div className=" h-72 w-72 md:h-80 md:w-80 lg:h-96 lg:w-96 rounded-lg shadow-2xl flex justify-center items-center">
+              <Spinner />
+            </div>
+          )}
+
           <div className="">
             <h1 className="text-5xl font-bold">Welcome!</h1>
             <p className="py-6">
               Hello, {handleTime} this is a web for learning and this section is
               greeting, yey!
+              <br />
+              and click button bellow to get random top rated movie
             </p>
             <button
-              onClick={() => handleNav(datasTopRate.id)}
+              onClick={() => fetchRandomHero('top_rated')}
               className="btn btn-primary"
             >
               Get Random Top
@@ -159,21 +163,19 @@ const Home = () => {
           </p>
           {datasUpc && isLoading === true ? (
             <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
-              {datasUpc.slice(0, 4).map((item: GetMovieType) => {
+              {datasUpc.slice(0, 4).map((prop: GetMovieType) => {
                 return (
                   <Card
-                    key={item.id}
-                    id={`movie-${item.title}`}
-                    title={item.title}
-                    description={item.overview}
-                    image={item.poster_path}
-                    onClick={() => handleNav(item.id)}
+                    key={`card-${prop.id}`}
+                    button_label="Detail"
+                    item={prop}
+                    onClick={() => handleNav(prop.id)}
                   />
                 );
               })}
             </div>
           ) : (
-            <div className="w-full bg-slate-400 h-[450px] flex items-center justify-center">
+            <div className="w-full bg-base-300 h-[450px] flex items-center justify-center">
               <Spinner />
             </div>
           )}
@@ -195,21 +197,19 @@ const Home = () => {
           </p>
           {datasNowPlay && isLoading === true ? (
             <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
-              {datasNowPlay.map((item: GetMovieType) => {
+              {datasNowPlay.map((prop: GetMovieType) => {
                 return (
                   <Card
-                    key={item.id}
-                    id={`movie-${item.title}`}
-                    title={item.title}
-                    description={item.overview}
-                    image={item.poster_path}
-                    onClick={() => handleNav(item.id)}
+                    key={`card-${prop.id}`}
+                    button_label="Detail"
+                    item={prop}
+                    onClick={() => handleNav(prop.id)}
                   />
                 );
               })}
             </div>
           ) : (
-            <div className="w-full bg-slate-400 h-[450px] flex items-center justify-center">
+            <div className="w-full bg-base-100 h-[450px] flex items-center justify-center">
               <Spinner />
             </div>
           )}
