@@ -43,7 +43,6 @@ const Home = () => {
   };
 
   const fetchUpcoming = async (code: string) => {
-    setIsLoading(true);
     await api
       .getAll(code)
       .then((response) => {
@@ -61,7 +60,6 @@ const Home = () => {
   };
 
   const fetchRandomHero = async (code: string) => {
-    setIsLoading(true);
     await api
       .getAll(code)
       .then((response) => {
@@ -104,10 +102,14 @@ const Home = () => {
   };
 
   function dedicatedMount() {
-    fetchNowPlay('now_playing');
-    fetchUpcoming('upcoming');
-    fetchRandomHero('top_rated');
-    timeGreeting();
+    setIsLoading(true);
+    setTimeout(() => {
+      fetchNowPlay('now_playing');
+      fetchUpcoming('upcoming');
+      fetchRandomHero('top_rated');
+      timeGreeting();
+    }, 1000);
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -121,27 +123,29 @@ const Home = () => {
         id="greeting-section"
       >
         <div className="hero-content flex-col md:flex-row">
-          {/* {
-              <HeroesCard
-                id={`movie-${datasTopRate.title}`}
-                title={datasTopRate.title}
-                description={datasTopRate.overview}
-                image={datasTopRate.poster_path}
-                 onClick={() => this.handleNav(datasTopRate.id)}
-              />
-            } */}
-          <img
-            src="http://placekitten.com/900/900"
-            className="max-w-sm lg:max-w-md xl:max-w-lg rounded-lg shadow-2xl"
-          />
+          {datasTopRate && isLoading === true ? (
+            <HeroesCard
+              key={`detail ${datasTopRate.id}`}
+              button_label="Get Detail"
+              item={datasTopRate}
+              onClick={() => handleNav(datasTopRate.id)}
+            />
+          ) : (
+            <div className=" h-72 w-72 md:h-80 md:w-80 lg:h-96 lg:w-96 rounded-lg shadow-2xl flex justify-center items-center">
+              <Spinner />
+            </div>
+          )}
+
           <div className="">
             <h1 className="text-5xl font-bold">Welcome!</h1>
             <p className="py-6">
               Hello, {handleTime} this is a web for learning and this section is
               greeting, yey!
+              <br />
+              and click button bellow to get random top rated movie
             </p>
             <button
-              onClick={() => handleNav(datasTopRate.id)}
+              onClick={() => fetchRandomHero('top_rated')}
               className="btn btn-primary"
             >
               Get Random Top
