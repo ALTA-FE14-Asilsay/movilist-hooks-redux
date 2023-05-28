@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { Link, NavLink } from 'react-router-dom';
 import { GetMovieType } from '../utils/movieType';
 
 interface CardProps {
