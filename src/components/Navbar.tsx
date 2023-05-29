@@ -1,12 +1,16 @@
 import { Link, NavLink } from 'react-router-dom';
 import { FaRegMoon, FaRegSun } from 'react-icons/fa';
-import { FC } from 'react';
+import React, { FC } from 'react';
+import DarkThemeContext from '../context/darkModeContext';
 
 interface NavbarProps {
   id: string;
 }
 
 const Navbar: FC<NavbarProps> = ({ id }) => {
+  const { currentTheme, changeCurrentTheme } =
+    React.useContext(DarkThemeContext);
+
   return (
     <div
       id={id}
@@ -46,7 +50,14 @@ const Navbar: FC<NavbarProps> = ({ id }) => {
           <li>
             <div className="flex justify-center">
               <label className="swap swap-rotate">
-                <input type="checkbox" />
+                <input
+                  onClick={() =>
+                    changeCurrentTheme(
+                      currentTheme === 'bumblebee' ? 'luxury' : 'bumblebee'
+                    )
+                  }
+                  type="checkbox"
+                />
 
                 <div className="swap-on fill-current ">
                   <FaRegSun size="1.1rem" />

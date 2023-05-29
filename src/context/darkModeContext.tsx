@@ -1,13 +1,11 @@
-import { createContext, SetStateAction, Dispatch } from 'react';
+import { createContext } from 'react';
 
-interface ThemeType {
-  theme: string;
-  setTheme: Dispatch<SetStateAction<string>>;
-}
-
-const theme: ThemeType = {
-  theme: '',
-  setTheme: () => {},
+const defaultValue = {
+  currentTheme: 'bumblebee',
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  changeCurrentTheme: (newTheme: string) => {},
 };
 
-export const ThemeContexat = createContext(theme);
+const DarkThemeContext = createContext(defaultValue);
+
+export default DarkThemeContext;
