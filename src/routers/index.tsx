@@ -3,6 +3,7 @@ import { Component } from 'react';
 
 import ScrollToTop from '../components/ScrollToTop';
 import Favorites from '../pages/Favorites';
+import Category from '../pages/Category';
 import Detail from '../pages/Detail';
 import Error from '../pages/Error';
 import Home from '../pages';
@@ -19,6 +20,10 @@ export const Router = () => {
         <Route
           path="/favorite"
           element={<Favorites />}
+        />
+        <Route
+          path="/category/:movie_category"
+          element={<Category />}
         />
         <Route
           path="/detail/:movie_id"
