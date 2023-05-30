@@ -1,15 +1,32 @@
-import { Link, NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaRegMoon, FaRegSun } from 'react-icons/fa';
-import React, { FC } from 'react';
-import DarkThemeContext from '../context/darkModeContext';
+import { Link, NavLink } from 'react-router-dom';
+import { FC } from 'react';
+
+import { ThemeState, toChangeTheme } from '../reducer/themeSlice';
 
 interface NavbarProps {
   id: string;
 }
 
 const Navbar: FC<NavbarProps> = ({ id }) => {
-  const { currentTheme, changeCurrentTheme } =
-    React.useContext(DarkThemeContext);
+  const dispatch = useDispatch();
+  const theme = useSelector((state: { theme: ThemeState }) => state.theme);
+
+  function handleChangeTheme() {
+    theme?.DarkMode === 'bumblebee'
+      ? (dispatch(toChangeTheme('luxury')),
+        localStorage.setItem('theme', 'luxury'))
+      : (dispatch(toChangeTheme('bumblebee')),
+        localStorage.setItem('theme', 'bumblebee'));
+
+    const elem = document.activeElement as HTMLElement;
+    if (elem) {
+      elem?.blur?.();
+    }
+  }
+
+  const icons = localStorage.getItem('theme') || 'bumblebee';
 
   return (
     <div
@@ -51,20 +68,24 @@ const Navbar: FC<NavbarProps> = ({ id }) => {
             <div className="flex justify-center">
               <label className="swap swap-rotate">
                 <input
-                  onClick={() =>
-                    changeCurrentTheme(
-                      currentTheme === 'bumblebee' ? 'luxury' : 'bumblebee'
-                    )
-                  }
+                  onClick={() => handleChangeTheme()}
                   type="checkbox"
                 />
 
                 <div className="swap-on fill-current ">
-                  <FaRegSun size="1.1rem" />
+                  {icons === 'luxury' ? (
+                    <FaRegSun size="1.1rem" />
+                  ) : (
+                    <FaRegMoon size="1.1rem" />
+                  )}
                 </div>
 
                 <div className="swap-off fill-current ">
-                  <FaRegMoon size="1.1rem" />
+                  {icons === 'bumblebee' ? (
+                    <FaRegMoon size="1.1rem" />
+                  ) : (
+                    <FaRegSun size="1.1rem" />
+                  )}
                 </div>
               </label>
             </div>
