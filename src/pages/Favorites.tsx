@@ -17,6 +17,14 @@ export const Favorites = () => {
 
   const navigate = useNavigate();
 
+  const handleNav = (movie_id?: number) => {
+    navigate(`/detail/${movie_id}`, {
+      state: {
+        movie_id: movie_id,
+      },
+    });
+  };
+
   const fetchFavo = async (code: string) => {
     setIsLoading(true);
     await api
@@ -52,15 +60,13 @@ export const Favorites = () => {
           </p>
           {isLoading ? (
             <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
-              {datasFavo.map((item: GetMovieType) => {
+              {datasFavo.map((prop: GetMovieType) => {
                 return (
                   <Card
-                    key={item.id}
-                    id={`movie-${item.title}`}
-                    title={item.title}
-                    description={item.overview}
-                    image={item.poster_path}
-                    onClick={() => navigate(`${item.id}`)}
+                    key={`card-${prop.id}`}
+                    button_label="Detail"
+                    item={prop}
+                    onClick={() => handleNav(prop.id)}
                   />
                 );
               })}
