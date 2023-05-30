@@ -1,6 +1,9 @@
 import withReactContent from 'sweetalert2-react-content';
+import { useDispatch, useSelector } from 'react-redux';
 import { FC, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { FavoriteState, Item, removeItem } from '../reducer/favoriteSlice';
 
 import { Layout, Section } from '../components/Layout';
 import { GetMovieType } from '../utils/movieType';
@@ -16,6 +19,11 @@ export const Favorites = () => {
   const MySwal = withReactContent(swal);
 
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+  const favorite = useSelector(
+    (state: { favorite: FavoriteState }) => state.favorite
+  );
 
   const handleNav = (movie_id?: number) => {
     navigate(`/detail/${movie_id}`, {
@@ -44,9 +52,21 @@ export const Favorites = () => {
       .finally(() => setIsLoading(false));
   };
 
+  const RemoveFromFavorite = (item: any) => {
+    dispatch(removeItem(item));
+
+    MySwal.fire({
+      icon: 'success',
+      title: 'Success Added',
+      text: 'Successfully add to Favorite',
+      showCancelButton: false,
+      confirmButtonText: 'OK',
+    });
+  };
+
   useEffect(() => {
-    fetchFavo('19622220');
-  }, []);
+    console.log('add to favorite : ', favorite.items);
+  }, [favorite.items]);
 
   return (
     <Layout>
@@ -58,24 +78,19 @@ export const Favorites = () => {
           <p className="text-3xl mb-6 tracking-wider uppercase font-semibold ">
             My Favorites
           </p>
-          {isLoading ? (
-            <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
-              {datasFavo.map((prop: GetMovieType) => {
-                return (
-                  <Card
-                    key={`card-${prop.id}`}
-                    button_label="Detail"
-                    item={prop}
-                    onClick={() => handleNav(prop.id)}
-                  />
-                );
-              })}
-            </div>
-          ) : (
-            <div className="w-full bg-slate-400 h-[450px] flex items-center justify-center">
-              <Spinner />
-            </div>
-          )}
+
+          <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
+            {favorite.items.map((prop: GetMovieType) => {
+              return (
+                <Card
+                  key={`card-${prop.id}`}
+                  button_label="Remove"
+                  item={prop}
+                  onClick={() => RemoveFromFavorite(prop.id)}
+                />
+              );
+            })}
+          </div>
         </div>
       </Section>
     </Layout>
