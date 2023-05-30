@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import withReactContent from 'sweetalert2-react-content';
 import { useState, useEffect } from 'react';
 
@@ -8,17 +9,39 @@ import Spinner from '../components/Loading';
 import { Card } from '../components/Card';
 import swal from '../utils/swal';
 import api from '../utils/api';
+import { FavoriteState, addItem, Item } from '../reducer/favoriteSlice';
 
 export const Detail = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [datasSimilar, setDatasSimilar] = useState<GetMovieType[]>([]);
   const [dataDetail, setDataDetail] = useState<GetDetailType>({});
 
   const MySwal = withReactContent(swal);
-
   const id: string = location?.state?.movie_id;
+  const favorite = useSelector(
+    (state: { favorite: FavoriteState }) => state.favorite
+  );
+
+  const addToFavorite = (item: any) => {
+    const newItem: Item = {
+      id: item.id,
+      poster_path: item.poster_path,
+      title: item.title,
+    };
+
+    dispatch(addItem(newItem));
+    console.log('add to favorite : ', favorite.items);
+    MySwal.fire({
+      icon: 'success',
+      title: 'Success Added',
+      text: 'Successfully add to Favorite',
+      showCancelButton: false,
+      confirmButtonText: 'OK',
+    });
+  };
 
   const fetchDetail = async (code: string) => {
     setIsLoading(true);
@@ -105,16 +128,17 @@ export const Detail = () => {
                 </p>
                 <p className="font-semibold tracking-wide">
                   Genre:{' '}
-                  <span className="tracking-normal font-normal">
-                    {dataDetail.genres?.map((item: GetGenresType) => {
-                      return (
-                        <>
-                          {item.name}
-                          {', '}
-                        </>
-                      );
-                    })}
-                  </span>
+                  {dataDetail.genres?.map((item: GetGenresType) => {
+                    return (
+                      <span
+                        className="tracking-normal font-normal"
+                        key={`genre_id:${item.id}`}
+                      >
+                        {item.name}
+                        {', '}
+                      </span>
+                    );
+                  })}
                 </p>
                 <p className="font-semibold tracking-wide">
                   Language:{' '}
@@ -138,6 +162,7 @@ export const Detail = () => {
                   <button
                     id="nav-favorite"
                     className="btn btn-primary "
+                    onClick={() => addToFavorite(dataDetail)}
                   >
                     Add to favorite
                   </button>

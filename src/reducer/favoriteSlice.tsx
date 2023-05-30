@@ -22,9 +22,8 @@ export const favoriteSlice = createSlice({
       state.items.push(action.payload);
     },
     removeItem(state, action: PayloadAction<number>) {
-      state.items = state.items.filter((item) => {
-        item.id !== action.payload;
-      });
+      const findIndex = state.items.findIndex((a) => a.id === action.payload);
+      findIndex !== -1 && state.items.splice(findIndex, 1);
     },
   },
 });
