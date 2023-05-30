@@ -1,14 +1,6 @@
 import React, { FC } from 'react';
 import { GetMovieType } from '../utils/movieType';
 
-interface CardProps {
-  id: string;
-  title?: string;
-  description?: string;
-  image?: string;
-  onClick?: React.MouseEventHandler;
-}
-
 interface CardPropsType {
   item: GetMovieType;
   navigate?: string;

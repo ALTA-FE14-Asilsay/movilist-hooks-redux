@@ -1,56 +1,21 @@
 import withReactContent from 'sweetalert2-react-content';
 import { useDispatch, useSelector } from 'react-redux';
-import { FC, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
-import { FavoriteState, Item, removeItem } from '../reducer/favoriteSlice';
+import { FavoriteState, removeItem } from '../reducer/favoriteSlice';
 
 import { Layout, Section } from '../components/Layout';
 import { GetMovieType } from '../utils/movieType';
-import Spinner from '../components/Loading';
 import { Card } from '../components/Card';
 import swal from '../utils/swal';
-import api from '../utils/api';
 
 export const Favorites = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [datasFavo, setDatasFavo] = useState<GetMovieType[]>([]);
-
   const MySwal = withReactContent(swal);
-
-  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const favorite = useSelector(
     (state: { favorite: FavoriteState }) => state.favorite
   );
-
-  const handleNav = (movie_id?: number) => {
-    navigate(`/detail/${movie_id}`, {
-      state: {
-        movie_id: movie_id,
-      },
-    });
-  };
-
-  const fetchFavo = async (code: string) => {
-    setIsLoading(true);
-    await api
-      .getFavo(code)
-      .then((response) => {
-        const { data } = response.data.results;
-        setDatasFavo(data);
-      })
-      .catch((error) => {
-        MySwal.fire({
-          icon: 'error',
-          title: 'Failed',
-          text: `error :  ${error.message}`,
-          showCancelButton: false,
-        });
-      })
-      .finally(() => setIsLoading(false));
-  };
 
   const RemoveFromFavorite = (item: any) => {
     dispatch(removeItem(item));
