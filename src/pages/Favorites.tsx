@@ -12,14 +12,21 @@ import swal from '../utils/swal';
 export const Favorites = () => {
   const MySwal = withReactContent(swal);
 
+  const existStr = localStorage.getItem('datasfavorite');
+  const existArr = existStr ? JSON.parse(existStr) : [];
+
   const dispatch = useDispatch();
   const favorite = useSelector(
     (state: { favorite: FavoriteState }) => state.favorite
   );
 
   const RemoveFromFavorite = (item: any) => {
-    dispatch(removeItem(item));
+    const findIndex = existArr.findIndex((a: any) => a.id === item);
+    findIndex !== -1 && existArr.splice(findIndex, 1);
 
+    localStorage.setItem('datasfavorite', JSON.stringify(existArr));
+
+    dispatch(removeItem(item));
     MySwal.fire({
       icon: 'success',
       title: 'Success Added',
@@ -31,7 +38,7 @@ export const Favorites = () => {
 
   useEffect(() => {
     console.log('add to favorite : ', favorite.items);
-  }, [favorite.items]);
+  }, [existArr]);
 
   return (
     <Layout>
@@ -45,7 +52,7 @@ export const Favorites = () => {
           </p>
 
           <div className="w-full grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-5">
-            {favorite.items.map((prop: GetMovieType) => {
+            {existArr.map((prop: GetMovieType) => {
               return (
                 <Card
                   key={`card-${prop.id}`}

@@ -1,3 +1,3 @@
 ## Deployment
 
-link : [Movielist](https://movilist-hooks-redux-ob1hm0u8r-asilsay.vercel.app)
+link : [Movielist](https://movilist-hooks-redux.vercel.app/)
