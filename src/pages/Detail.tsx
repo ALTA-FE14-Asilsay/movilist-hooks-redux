@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import withReactContent from 'sweetalert2-react-content';
 import { useState, useEffect } from 'react';
 
@@ -9,7 +9,7 @@ import Spinner from '../components/Loading';
 import { Card } from '../components/Card';
 import swal from '../utils/swal';
 import api from '../utils/api';
-import { FavoriteState, addItem, Item } from '../reducer/favoriteSlice';
+import { addItem, Item } from '../reducer/favoriteSlice';
 
 export const Detail = () => {
   const navigate = useNavigate();
@@ -21,9 +21,6 @@ export const Detail = () => {
 
   const MySwal = withReactContent(swal);
   const id: string = location?.state?.movie_id;
-  const favorite = useSelector(
-    (state: { favorite: FavoriteState }) => state.favorite
-  );
 
   const addToFavorite = (item: any) => {
     const existStr = localStorage.getItem('datasfavorite');
