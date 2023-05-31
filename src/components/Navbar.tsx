@@ -62,7 +62,7 @@ const Navbar: FC<NavbarProps> = ({ id }) => {
                   ? 'active text-primary-content font-semibold tracking-wide'
                   : ''
               }
-              to={'/category/all'}
+              to={'/category/popular'}
             >
               CATEGORY
             </NavLink>

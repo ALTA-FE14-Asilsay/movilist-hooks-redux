@@ -144,12 +144,21 @@ const Home = () => {
               <br />
               and click button bellow to get random top rated movie
             </p>
-            <button
-              onClick={() => fetchRandomHero('top_rated')}
-              className="btn btn-primary"
-            >
-              Get Random Top
-            </button>
+            <div className="flex flex-row gap-3">
+              <button
+                onClick={() => fetchRandomHero('top_rated')}
+                className="btn btn-primary"
+              >
+                Get Random Top
+              </button>
+              <button
+                id="nav-showmore"
+                className="btn btn-secondary btn-outline"
+                onClick={() => navigate('/category/top_rated')}
+              >
+                Show More
+              </button>
+            </div>
           </div>
         </div>
       </Section>
@@ -182,8 +191,9 @@ const Home = () => {
           <button
             id="nav-showmore"
             className="btn btn-primary btn-wide"
+            onClick={() => navigate('/category/upcoming')}
           >
-            More
+            Show More
           </button>
         </div>
       </Section>
@@ -217,6 +227,7 @@ const Home = () => {
           <button
             id="nav-showmore"
             className="btn btn-primary btn-wide"
+            onClick={() => navigate('/category/now_playing')}
           >
             Show More
           </button>
