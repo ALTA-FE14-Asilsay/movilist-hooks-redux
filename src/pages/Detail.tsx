@@ -26,21 +26,37 @@ export const Detail = () => {
   );
 
   const addToFavorite = (item: any) => {
-    const newItem: Item = {
-      id: item.id,
-      poster_path: item.poster_path,
-      title: item.title,
-    };
+    const existStr = localStorage.getItem('datasfavorite');
+    const existArr = existStr ? JSON.parse(existStr) : [];
 
-    dispatch(addItem(newItem));
-    console.log('add to favorite : ', favorite.items);
-    MySwal.fire({
-      icon: 'success',
-      title: 'Success Added',
-      text: 'Successfully add to Favorite',
-      showCancelButton: false,
-      confirmButtonText: 'OK',
-    });
+    if (!existArr.find((obj: any) => obj.id === item.id)) {
+      const newItem: Item = {
+        id: item.id,
+        poster_path: item.poster_path,
+        title: item.title,
+      };
+
+      existArr.push(newItem);
+
+      localStorage.setItem('datasfavorite', JSON.stringify(existArr));
+      dispatch(addItem(newItem));
+
+      MySwal.fire({
+        icon: 'success',
+        title: 'Success Added',
+        text: 'Successfully add to Favorite',
+        showCancelButton: false,
+        confirmButtonText: 'OK',
+      });
+    } else {
+      MySwal.fire({
+        icon: 'warning',
+        title: 'Failed Add',
+        text: 'this item already in Favorite',
+        showCancelButton: false,
+        confirmButtonText: 'OK',
+      });
+    }
   };
 
   const fetchDetail = async (code: string) => {

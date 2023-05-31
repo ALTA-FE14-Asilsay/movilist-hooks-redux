@@ -56,10 +56,28 @@ const Navbar: FC<NavbarProps> = ({ id }) => {
             </NavLink>
           </li>
           <li>
-            <NavLink to={'/favorite'}>CATEGORY</NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                isActive
+                  ? 'active text-primary-content font-semibold tracking-wide'
+                  : ''
+              }
+              to={'/category/all'}
+            >
+              CATEGORY
+            </NavLink>
           </li>
           <li>
-            <NavLink to={'/favorite'}>FAVORITE</NavLink>
+            <NavLink
+              className={({ isActive }) =>
+                isActive
+                  ? 'active text-primary-content font-semibold tracking-wide'
+                  : ''
+              }
+              to={'/favorite'}
+            >
+              FAVORITE
+            </NavLink>
           </li>
 
           <div className="divider divider-horizontal mx-1 py-3 lg:flex hidden"></div>

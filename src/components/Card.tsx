@@ -71,7 +71,7 @@ export const HeroesCard: FC<CardPropsType> = (CardPropsType) => {
             </div>
 
             <button
-              id={`nav-${item.title}`}
+              id={`roll-random-${item.title}`}
               className="btn btn-primary btn-wide"
               onClick={onClick}
             >

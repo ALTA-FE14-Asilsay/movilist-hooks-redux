@@ -20,6 +20,7 @@ export const favoriteSlice = createSlice({
   reducers: {
     addItem(state, action: PayloadAction<Item>) {
       state.items.push(action.payload);
+      // localStorage.setItem('datasfavorite', JSON.stringify(action.payload));
     },
     removeItem(state, action: PayloadAction<number>) {
       const findIndex = state.items.findIndex((a) => a.id === action.payload);
